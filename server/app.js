@@ -19,11 +19,11 @@ app.use(bodyParser.urlencoded({extended: false}))
 app.listen(3000, ()=> {
     console.log("I am listening at 3000")
     console.log(db)
-    // db.sync().then(()=>{
-    //     console.log("Synchronated the database")
-    // }).catch(()=>{
-    //     console.log("Trouble right here in the River City", err, err.stack)
-    // })
+    db.sync().then(()=>{
+        console.log("Synchronated the database")
+    }).catch(()=>{
+        console.log("Trouble right here in the River City", err, err.stack)
+    })
 })
 
 //---err-------
