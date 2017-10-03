@@ -1,6 +1,6 @@
 const Sequelize = require("sequelize")
 
-const db = new Sequelize('postgres://localhost:5432/tripDB')
+const db = new Sequelize('postgres://localhost:5432/tripDB', {logging: false})
 var Promise = require("bluebird");
 
 
