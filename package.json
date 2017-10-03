@@ -12,9 +12,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "morgan": "^1.9.0",
+    "sequelize": "^4.13.3",
     "webpack": "^3.6.0"
   },
   "dependencies": {
+    "body-parser": "^1.18.2",
     "mapbox-gl": "^0.40.1"
   }
 }
