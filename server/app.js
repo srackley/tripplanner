@@ -17,10 +17,6 @@ app.use(bodyParser.urlencoded({extended: false}))
 
 app.listen(3000, ()=> {
     console.log("I am listening at 3000")
-<<<<<<< HEAD
-    console.log(db)
-=======
->>>>>>> f292c380cdcea78da41decfc4ba48b9bf2c8c972
     db.sync().then(()=>{
         console.log("Synchronated the database")
     }).catch(()=>{
