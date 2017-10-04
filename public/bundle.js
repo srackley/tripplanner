@@ -546,72 +546,59 @@ const map = new mapboxgl.Map({
   style: 'mapbox://styles/mapbox/light-v9'
 });
 
-const marker = buildMarker('activities', [-74.009, 40.705]);
-marker.addTo(map);
+
+
+
+
+var attractionsObj = {
+  hotels: [],
+  activities: [],
+  restaurants: []
+};
+
+const attractionTypes = ['hotels', 'restaurants', 'activities'];
 
 document.addEventListener('DOMContentLoaded', () => {
-  //debugger;
-  var hotelSelection = document.getElementById('hotels-choices');
-  var activitySelection = document.getElementById('activities-choices');
-  var restaurantSelection = document.getElementById('restaurants-choices');
-
   fetch('/api/attractions')
-    .then(result => result.json())
-    .then(data => {
-      data.Hotel.forEach(element => {
-        var option = document.createElement('option');
-        option.text = element.name;
-        option.value = element.place.location;
+    .then(res => res.json())
+    .then(attractions => {
+      attractionTypes.forEach((attractionType) => {
+       attractionsObj = attractions;
+        attractionsObj[attractionType].forEach(attraction => {
+          const option = document.createElement('option');
+          option.innerText = attraction.name;
+          option.value = attraction.id;
+          const select = document.getElementById(`${attractionType}-choices`);
+          select.appendChild(option);
+      });
+    });
+  })
+  .catch(console.error);
 
-        hotelSelection.appendChild(option);
-      }, this);
+  attractionTypes.forEach(attractionType => {
+    const btn = document.getElementById(`${attractionType}-add`);
+    btn.onclick = () => {
+      const select = document.getElementById(`${attractionType}-choices`);
+      const selected = select.value;
+      const item = document.createElement('li');
+      const attraction = attractionsObj[attractionType].find(el => el.id == selected);
+      item.innerText = attraction.name;
+      const list = document.getElementById(`${attractionType}-list`);
+      list.appendChild(item);
 
-      data.Activity.forEach(element => {
-        var option = document.createElement('option');
-        option.text = element.name;
-        option.value = element.place.location;
-        activitySelection.appendChild(option);
-      }, this);
+      const marker = buildMarker(attractionType, attraction.place.location);
+      marker.addTo(map);
 
-      data.Restaurant.forEach(element => {
-        var option = document.createElement('option');
-        option.text = element.name;
-        option.value = element;
-        restaurantSelection.appendChild(option);
-      }, this);
+      const remove = document.createElement('button');
+      remove.innerText = 'x';
 
-
-      console.log('----fetch request------', data.length);
-    })
-.catch(console.error);
-
-    let hotelButton = document.getElementById('hotels-add');
-
-    hotelButton.onclick = () => {
-      let hotelValue = hotelSelection.value.split(',');
-      const hotelMarker = buildMarker('hotels', [hotelValue[0], hotelValue[1]]);
-      hotelMarker.addTo(map);
-
+      remove.onclick = () => { item.remove(); };
+      item.appendChild(remove);
+      marker.remove();
     };
-
-    let restaurantButton = document.getElementById('restaurants-add');
-
-    restaurantButton.onclick = () => {
-      let restaurantLoc = restaurantSelection.value.place.location.split(',');
-      const restaurantMarker = buildMarker('restaurants', [restaurantLoc[0], restaurantLoc[1]]);
-      console.log(restaurantSelection.value)
-      restaurantMarker.addTo(map);
-    };
-
-    let activityButton = document.getElementById('activities-add');
-
-    activityButton.onclick = () => {
-      let activityValue = activitySelection.value.split(',');
+  });
       const activityMarker = buildMarker('activities', [activityValue[0], activityValue[1]]);
       activityMarker.addTo(map);
-    };
-
-
 });
 //hotels-choices restaurants-choices activities-choices
 

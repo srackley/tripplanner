@@ -9,14 +9,9 @@ router.get('/attractions', (req, res, next) => {
     Restaurant.findAll( { include: [ Place ] } ),
     Hotel.findAll( { include: [ Place ] } )
   ])
-    .then(results => {
-      var obj = {
-        Activity: results[0],
-        Restaurant: results[1],
-        Hotel: results[2]
-      };
-      res.json(obj);
-    });
+    .then(([hotels, restaurants, activities]) =>
+      res.json({hotels, restaurants, activities}))
+    .catch(next);
 });
 
 module.exports = router;
