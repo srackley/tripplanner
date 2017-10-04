@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "bluebird": "^3.5.0",
     "express": "^4.16.1",
     "morgan": "^1.9.0",
     "pg": "^7.3.0",
