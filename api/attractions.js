@@ -8,22 +8,18 @@ const {Activity} = models;
 const {Restaurant} = models;
 const {Hotel} = models;
 var all = [];
-router.get('/api', (req, res, next)=>{
-  Promise.all([Hotel, Restaurant, Activity]).then((values) => {
-    values.forEach(el => {
 
-      el.findAll({}).then(results => {
-        console.log(all);
-        // console.log(results);
-        all.push(results) })
+router.get('/api/attractions', (req, res, next)=>{
+  Promise.all([Activity.findAll({include: [ Place ]}), Restaurant.findAll({include: [ Place ]}),Hotel.findAll({include: [ Place ]})])
+    .then( results => {
+      console.log("-----",typeof results[0])
+      var obj = {
+        Activity: results[0],
+        Restaurant: results[1],
+        Hotel: results[2]
+      }
+      res.json(obj)
     })
-
-    return all;
-  }).then( every => res.json(every[2]));
-
-//  Hotel.findAll({}).then((results)=>{
-//    all.hotel = results;
-//  })
 })
 
 module.exports = router;

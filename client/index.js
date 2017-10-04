@@ -12,3 +12,55 @@ const map = new mapboxgl.Map({
 
 const marker = buildMarker("activities", [-74.009, 40.705]);
 marker.addTo(map);
+
+document.addEventListener("DOMContentLoaded", () => {
+  //debugger;
+  fetch('/api/attractions')
+    .then(result => result.json())
+    .then(data => {
+      data.Hotel.forEach(element => {
+        var option = document.createElement("option")
+        option.text = element.name;
+        option.value = element.place.location;
+        var hotelSelection = document.getElementById('hotels-choices')
+        hotelSelection.appendChild(option)
+      }, this);
+
+      data.Activity.forEach(element => {
+        var option = document.createElement("option")
+        option.text = element.name;
+        var activitySelection = document.getElementById('activities-choices')
+        activitySelection.appendChild(option)
+      }, this);
+
+      data.Restaurant.forEach(element => {
+        var option = document.createElement("option")
+        option.text = element.name;
+        var restaurantSelection = document.getElementById('restaurants-choices')
+        restaurantSelection.appendChild(option)
+      }, this);
+
+
+      console.log("----fetch request------",data.length)
+    }).catch(console.error)
+
+    let hotelButton = document.getElementById("hotels-add")
+
+    hotelButton.onclick = ()=> {
+      let hotelValue = hotelSelection.option[hotelSelection.selectedIndex]
+      const hotelMarker = buildMarker("hotels", hotelValue.location);
+      hotelMarker.addTo(map);
+    }
+
+    let restaurantButton = document.getElementById("restaurant-add")
+    
+    restaurantButton.onclick = ()=> {
+      let restaurantlValue = hotelSelection.option[hotelSelection.selectedIndex]
+      const hotelMarker = buildMarker("restaurants", hotelValue.location);
+      hotelMarker.addTo(map);
+    }
+
+
+
+});
+//hotels-choices restaurants-choices activities-choices
